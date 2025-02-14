@@ -68,13 +68,17 @@ def convert(curl_command):
         headers[match[0]] = match[1]
 
     # 提取 cookies
+    
     cookies = {}
-    cookie_string = headers.pop('cookie', '')
+    cookie_string = headers.pop('cookie', '')  # 获取 Cookie 字符串
     for cookie in cookie_string.split('; '):
-        key, value = cookie.split('=', 1)
+        if '=' in cookie:
+            key, value = cookie.split('=', 1)  # 只分割一次，避免 value 里有 `=` 影响
+        else:
+            key, value = cookie, ""  # 处理没有 `=` 的情况
         cookies[key] = value
-
     return headers, cookies
+
 
 
 headers, cookies = convert(curl_str) if curl_str else (headers, cookies)
